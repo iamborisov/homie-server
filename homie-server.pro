@@ -1,23 +1,51 @@
+#==============================================================================
+#  APPLICATION INFORMATION
+#==============================================================================
+NAME = Homie-Server
+VERSION = 1.0.0-dev
+DESCRIPTION = put_application_description_here
+
+#==============================================================================
+#  SOURCE CODE
+#==============================================================================
+SOURCES += \
+        main.cpp \
+    homie.cpp \
+    container/container.cpp
+
+HEADERS += \
+    homie.h \
+    container/container.h
+
+#==============================================================================
+#  EXTERNAL DEPENDENCIES
+#==============================================================================
+
+# Google Fruit DI-framework
+# https://github.com/google/fruit
+unix|win32: LIBS += -lfruit
+
+#==============================================================================
+#  QT CONFIGURATION
+#==============================================================================
 QT -= gui
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
 
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which as been marked deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += QT_DEPRECATED_WARNINGS # Display deprication warnings
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000 # Disable all the APIs deprecated before Qt 6.0.0
 
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
-SOURCES += \
-        main.cpp
-
-# Default rules for deployment.
+#==============================================================================
+#  DEPLOYMENT
+#==============================================================================
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+#==============================================================================
+#  ADDITIONAL DEFINITIONS
+#==============================================================================
+DEFINES += APP_NAME=\\\"$${NAME}\\\"
+DEFINES += APP_VERSION=\\\"$${VERSION}\\\"
+DEFINES += APP_DESCRIPTION=\\\"$${DESCRIPTION}\\\"

@@ -1,8 +1,11 @@
-#include <QCoreApplication>
+#include <homie.h>
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    Homie application(argc, argv);
 
-    return a.exec();
+    // main loop delay
+    application.frequency = 10; //ms
+
+    return application.run();
 }
