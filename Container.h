@@ -1,5 +1,5 @@
-#ifndef CONTAINER_H
-#define CONTAINER_H
+#ifndef  HOMIE_CONTAINER_INTERFACE_H
+#define  HOMIE_CONTAINER_INTERFACE_H
 
 #include <QObject>
 #include <fruit/fruit.h>
@@ -10,13 +10,11 @@ class Container : public QObject
 {
     Q_OBJECT
 public:
-    INJECT(Container());
+    Container();
 
 signals:
 
 public slots:
 };
 
-Component<Container> getContainerComponent();
-
-#endif // CONTAINER_H
+#endif //  HOMIE_CONTAINER_INTERFACE_H

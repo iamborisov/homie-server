@@ -1,11 +1,19 @@
-#include "homie.h"
+#include "Application.h"
 #include <QTimer>
 #include <fruit/fruit.h>
+
+#if defined(DEBUG)
+    #include "ContainerDebug.h"
+#elif defined(TEST)
+    #include "ContainerTest.h"
+#else
+    #include "ContainerRelease.h"
+#endif
 
 using fruit::Component;
 using fruit::Injector;
 
-Homie::Homie(int &argc, char **argv) :
+Application::Application(int &argc, char **argv) :
     QObject(nullptr),
     frequency(0),
     application(argc, argv),
@@ -26,7 +34,14 @@ Homie::Homie(int &argc, char **argv) :
     bindQuit();
 
     // Dependency Injection container
-    Injector<Container> injector(getContainerComponent);
+#if defined(DEBUG)
+    Injector<Container> injector(getContainerDebugComponent);
+#elif defined(TEST)
+    Injector<Container> injector(getContainerTestComponent);
+#else
+    Injector<Container> injector(getContainerReleaseComponent);
+#endif
+
     container = injector.get<Container*>();
 }
 
@@ -34,14 +49,14 @@ Homie::Homie(int &argc, char **argv) :
 // Main loop timer
 //-----------------------------------------------------------------------------
 
-void Homie::defer(bool force)
+void Application::defer(bool force)
 {
     if (force || frequency > 0) {
         QTimer::singleShot(frequency, this, SLOT(onDefer()));
     }
 }
 
-void Homie::onDefer()
+void Application::onDefer()
 {
     main();
     defer();
@@ -51,7 +66,7 @@ void Homie::onDefer()
 // "Run" event
 //-----------------------------------------------------------------------------
 
-int Homie::run()
+int Application::run()
 {
     emit doRun();
 
@@ -60,7 +75,7 @@ int Homie::run()
     return application.exec();
 }
 
-void Homie::bindRun()
+void Application::bindRun()
 {
     QObject::connect(
         this, SIGNAL(doRun()),
@@ -68,7 +83,7 @@ void Homie::bindRun()
     );
 }
 
-void Homie::onRun()
+void Application::onRun()
 {
     // TODO: load resources
 
@@ -79,12 +94,12 @@ void Homie::onRun()
 // "Main" event
 //-----------------------------------------------------------------------------
 
-void Homie::main()
+void Application::main()
 {
     emit doMain();
 }
 
-void Homie::bindMain()
+void Application::bindMain()
 {
     QObject::connect(
         this, SIGNAL(doMain()),
@@ -92,7 +107,7 @@ void Homie::bindMain()
     );
 }
 
-void Homie::onMain()
+void Application::onMain()
 {
     // TODO: main loop
 }
@@ -101,12 +116,12 @@ void Homie::onMain()
 // "Quit" event
 //-----------------------------------------------------------------------------
 
-void Homie::quit()
+void Application::quit()
 {
     emit doQuit();
 }
 
-void Homie::bindQuit()
+void Application::bindQuit()
 {
     QObject::connect(
         this, SIGNAL(doQuit()),
@@ -118,7 +133,7 @@ void Homie::bindQuit()
     );
 }
 
-void Homie::onQuit()
+void Application::onQuit()
 {
     frequency = 0;
 

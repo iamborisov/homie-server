@@ -1,16 +1,17 @@
-#ifndef HOMIE_H
-#define HOMIE_H
+#ifndef HOMIE_APPLICATION_H
+#define HOMIE_APPLICATION_H
 
 #include <QObject>
 #include <QCoreApplication>
 #include <QCommandLineParser>
-#include <container/container.h>
 
-class Homie : public QObject
+#include "Container.h"
+
+class Application : public QObject
 {
     Q_OBJECT
 public:
-    explicit Homie(int &argc, char **argv);
+    explicit Application(int &argc, char **argv);
 
 //-----------------------------------------------------------------------------
 // Fields
@@ -60,4 +61,4 @@ private slots:
     void onQuit();
 };
 
-#endif // HOMIE_H
+#endif // HOMIE_APPLICATION_H
