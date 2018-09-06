@@ -1,14 +1,19 @@
-#ifndef  HOMIE_CONTAINER_RELEASE_H
-#define  HOMIE_CONTAINER_RELEASE_H
+#ifndef  CONTAINER_RELEASE_H
+#define  CONTAINER_RELEASE_H
 
+#include "fruit.h"
 #include "Container.h"
 
 class ContainerRelease : public Container
 {
 public:
-    INJECT(ContainerRelease());
+    INJECT(ContainerRelease(
+        Application* application,
+        Arguments* arguments,
+        Configuration* configuration
+    ));
 };
 
 Component<Container> getContainerReleaseComponent();
 
-#endif //  HOMIE_CONTAINER_RELEASE_H
+#endif //  CONTAINER_RELEASE_H

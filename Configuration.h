@@ -1,20 +1,17 @@
-#ifndef HOMIE_CONFIGURATION_INTERFACE_H
-#define HOMIE_CONFIGURATION_INTERFACE_H
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 
 #include <QObject>
-#include <fruit/fruit.h>
-
-using fruit::Component;
 
 class Configuration : public QObject
 {
     Q_OBJECT
+
 public:
     Configuration();
 
-signals:
+private:
 
-public slots:
 };
 
-#endif // HOMIE_CONFIGURATION_INTERFACE_H
+#endif // CONFIGURATION_H

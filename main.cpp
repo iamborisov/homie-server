@@ -1,11 +1,27 @@
-#include "Application.h"
+// Determine application container type
+#if defined(DEBUG)
+    #include "ContainerDebug.h"
+    #define getContainer getContainerDebugComponent
+#elif defined(TEST)
+    #include "ContainerTest.h"
+    #define getContainer getContainerTestComponent
+#else
+    #include "ContainerRelease.h"
+    #define getContainer getContainerReleaseComponent
+#endif
 
 int main(int argc, char *argv[])
 {
-    Application application(argc, argv);
+    // Create container
+    Injector<Container> injector(getContainer);
+    Container* container = injector.get<Container*>();
 
-    // main loop delay
-    application.frequency = 10; //ms
+    // Handle command line arguments
+    container->getArguments()
+            ->setArgc(argc)
+            ->setArgv(argv)
+            ->process();
 
-    return application.run();
+    // Execute
+    return container->getApplication()->run();
 }

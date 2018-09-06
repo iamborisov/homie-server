@@ -1,9 +1,14 @@
 #include "ConfigurationFile.h"
 
-ConfigurationFile::ConfigurationFile(): Configuration ()
+ConfigurationFile::ConfigurationFile():
+    Configuration()
 {
 
 }
+
+//-----------------------------------------------------------------------------
+// Dependency Injection
+//-----------------------------------------------------------------------------
 
 Component<Configuration> getConfigurationFileComponent() {
     return fruit::createComponent()

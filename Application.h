@@ -1,30 +1,24 @@
-#ifndef HOMIE_APPLICATION_H
-#define HOMIE_APPLICATION_H
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
 #include <QObject>
 #include <QCoreApplication>
-#include <QCommandLineParser>
 
-#include "Container.h"
+#include "Arguments.h"
 
 class Application : public QObject
 {
     Q_OBJECT
-public:
-    explicit Application(int &argc, char **argv);
-
-//-----------------------------------------------------------------------------
-// Fields
-//-----------------------------------------------------------------------------
 
 public:
-    int frequency;
+    Application(Arguments* arguments);
+
+protected:
+    int timeout = 10; //ms
 
 private:
-    QCoreApplication application;
-    QCommandLineParser arguments;
-
-    Container* container;
+    QCoreApplication* core;
+    Arguments* arguments;
 
 //-----------------------------------------------------------------------------
 // Methods
@@ -36,10 +30,12 @@ public:
 
 private:
     void main();
-    void defer(bool force = false);
+    void startTimer(int delay);
+    void stopTimer();
 
 private slots:
-    void onDefer();
+    void onTimer();
+    void onTimerQuit();
 
 //-----------------------------------------------------------------------------
 // Events
@@ -55,10 +51,10 @@ private: // bindings
     void bindMain();
     void bindQuit();
 
-private slots:
-    void onRun();
-    void onMain();
-    void onQuit();
+public slots:
+    virtual void onRun() = 0;
+    virtual void onMain() = 0;
+    virtual void onQuit() = 0;
 };
 
-#endif // HOMIE_APPLICATION_H
+#endif // APPLICATION_H

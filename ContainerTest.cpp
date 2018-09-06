@@ -1,14 +1,27 @@
 #include "ContainerTest.h"
-#include "ContainerRelease.h"
 
-ContainerTest::ContainerTest(): Container ()
+#include "ApplicationConsole.h"
+#include "ArgumentsConsole.h"
+#include "ConfigurationFile.h"
+
+ContainerTest::ContainerTest( Application* application,
+                              Arguments* arguments,
+                              Configuration* configuration) :
+    Container( application,
+               arguments,
+               configuration)
 {
 
 }
 
+//-----------------------------------------------------------------------------
+// Dependency Injection
+//-----------------------------------------------------------------------------
+
 Component<Container> getContainerTestComponent() {
-  return fruit::createComponent()
-          //.bind<Interface, Test>();
-          //.replace(Some Release Dependency).with(Some Debug Dependency)
-          .install(getContainerReleaseComponent);
+    return fruit::createComponent()
+            .install(getApplicationConsoleComponent)
+            .install(getArgumentsConsoleComponent)
+            .install(getConfigurationFileComponent)
+            .bind<Container, ContainerTest>();
 }

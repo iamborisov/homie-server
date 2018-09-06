@@ -1,20 +1,29 @@
-#ifndef  HOMIE_CONTAINER_INTERFACE_H
-#define  HOMIE_CONTAINER_INTERFACE_H
+#ifndef CONTAINER_H
+#define CONTAINER_H
 
 #include <QObject>
-#include <fruit/fruit.h>
 
-using fruit::Component;
+#include "Application.h"
+#include "Arguments.h"
+#include "Configuration.h"
 
 class Container : public QObject
 {
     Q_OBJECT
+
 public:
-    Container();
+    Container(Application* application,
+              Arguments* arguments,
+              Configuration* configuration);
 
-signals:
+    Application* getApplication();
+    Arguments* getArguments();
+    Configuration* getConfiguration();
 
-public slots:
+private:
+    Application* application;
+    Arguments* arguments;
+    Configuration* configuration;
 };
 
-#endif //  HOMIE_CONTAINER_INTERFACE_H
+#endif //  CONTAINER_H

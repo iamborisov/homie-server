@@ -1,14 +1,19 @@
-#ifndef  HOMIE_CONTAINER_DEBUG_H
-#define  HOMIE_CONTAINER_DEBUG_H
+#ifndef  CONTAINER_DEBUG_H
+#define  CONTAINER_DEBUG_H
 
+#include "fruit.h"
 #include "Container.h"
 
 class ContainerDebug : public Container
 {
 public:
-    INJECT(ContainerDebug());
+    INJECT(ContainerDebug(
+        Application* application,
+        Arguments* arguments,
+        Configuration* configuration
+    ));
 };
 
 Component<Container> getContainerDebugComponent();
 
-#endif //  HOMIE_CONTAINER_DEBUG_H
+#endif //  CONTAINER_DEBUG_H

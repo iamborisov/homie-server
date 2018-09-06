@@ -1,14 +1,19 @@
-#ifndef HOMIE_CONFIGURATION_FILE_H
-#define HOMIE_CONFIGURATION_FILE_H
+#ifndef CONFIGURATIONFILE_H
+#define CONFIGURATIONFILE_H
 
+#include <QSettings>
+#include "fruit.h"
 #include "Configuration.h"
 
 class ConfigurationFile : public Configuration
 {
 public:
     INJECT(ConfigurationFile());
+
+private:
+    QSettings* settings;
 };
 
 Component<Configuration> getConfigurationFileComponent();
 
-#endif // HOMIE_CONFIGURATION_FILE_H
+#endif // CONFIGURATIONFILE_H

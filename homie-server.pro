@@ -4,7 +4,6 @@
 
 NAME = Homie-Server
 VERSION = 1.0.0
-DESCRIPTION = put_application_description_here
 
 #==============================================================================
 #  SOURCES
@@ -12,24 +11,29 @@ DESCRIPTION = put_application_description_here
 
 SOURCES = \
 	main.cpp \
-	Application.cpp \
+        Application.cpp \
+        ApplicationConsole.cpp \
+        Arguments.cpp \
+        ArgumentsConsole.cpp \
 	Configuration.cpp \
-	ConfigurationArguments.cpp \
-	ConfigurationFile.cpp \
+        ConfigurationFile.cpp \
 	Container.cpp \
 	ContainerDebug.cpp \
 	ContainerRelease.cpp \
-	ContainerTest.cpp
+        ContainerTest.cpp
 
 HEADERS = \
-	Application.h \
-	Configuration.h \
-	ConfigurationArguments.h \
-	ConfigurationFile.h \
-	Container.h \
-	ContainerDebug.h \
-	ContainerRelease.h \
-	ContainerTest.h
+        Application.h \
+        ApplicationConsole.h \
+        Arguments.h \
+        ArgumentsConsole.h \
+        Configuration.h \
+        ConfigurationFile.h \
+        Container.h \
+        ContainerDebug.h \
+        ContainerRelease.h \
+        ContainerTest.h
+        fruit.h
 
 #==============================================================================
 #  QT CONFIGURATION
@@ -62,4 +66,3 @@ CONFIG(debug, debug|release) {
 
 DEFINES += APP_NAME=\\\"$${NAME}\\\"
 DEFINES += APP_VERSION=\\\"$${VERSION}\\\"
-DEFINES += APP_DESCRIPTION=\\\"$${DESCRIPTION}\\\"

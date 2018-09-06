@@ -1,65 +1,39 @@
 #include "Application.h"
 #include <QTimer>
-#include <fruit/fruit.h>
 
-#if defined(DEBUG)
-    #include "ContainerDebug.h"
-#elif defined(TEST)
-    #include "ContainerTest.h"
-#else
-    #include "ContainerRelease.h"
-#endif
-
-using fruit::Component;
-using fruit::Injector;
-
-Application::Application(int &argc, char **argv) :
+Application::Application(Arguments* arguments) :
     QObject(nullptr),
-    frequency(0),
-    application(argc, argv),
-    arguments()
+    arguments(arguments)
 {
-    // Application info
-    application.setApplicationName(APP_NAME);
-    application.setApplicationVersion(APP_VERSION);
-
-    // CLI Arguments parser
-    arguments.setApplicationDescription(APP_DESCRIPTION);
-    arguments.addVersionOption();
-    arguments.addHelpOption();
-
-    // Events bindings
-    bindRun();
-    bindMain();
-    bindQuit();
-
-    // Dependency Injection container
-#if defined(DEBUG)
-    Injector<Container> injector(getContainerDebugComponent);
-#elif defined(TEST)
-    Injector<Container> injector(getContainerTestComponent);
-#else
-    Injector<Container> injector(getContainerReleaseComponent);
-#endif
-
-    container = injector.get<Container*>();
 }
 
 //-----------------------------------------------------------------------------
 // Main loop timer
 //-----------------------------------------------------------------------------
 
-void Application::defer(bool force)
+void Application::startTimer(int delay)
 {
-    if (force || frequency > 0) {
-        QTimer::singleShot(frequency, this, SLOT(onDefer()));
+    if (delay > 0) {
+        QTimer::singleShot(delay, this, SLOT(onTimer()));
+    } else if (delay == 0) {
+        onTimer();
     }
 }
 
-void Application::onDefer()
+void Application::stopTimer()
+{
+    timeout = -1;
+}
+
+void Application::onTimer()
 {
     main();
-    defer();
+    startTimer(timeout);
+}
+
+void Application::onTimerQuit()
+{
+    stopTimer();
 }
 
 //-----------------------------------------------------------------------------
@@ -68,11 +42,24 @@ void Application::onDefer()
 
 int Application::run()
 {
+    // Init application core
+    core = new QCoreApplication(arguments->getArgc(), arguments->getArgv());
+    core->setApplicationName(APP_NAME);
+    core->setApplicationVersion(APP_VERSION);
+
+    // Events bindings
+    bindRun();
+    bindMain();
+    bindQuit();
+
+    // Emit event
     emit doRun();
 
-    arguments.process(application);
+    // Start main loop
+    startTimer(timeout);
 
-    return application.exec();
+    // Run application core
+    return core->exec();
 }
 
 void Application::bindRun()
@@ -81,13 +68,6 @@ void Application::bindRun()
         this, SIGNAL(doRun()),
         this, SLOT(onRun())
     );
-}
-
-void Application::onRun()
-{
-    // TODO: load resources
-
-    defer(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -107,11 +87,6 @@ void Application::bindMain()
     );
 }
 
-void Application::onMain()
-{
-    // TODO: main loop
-}
-
 //-----------------------------------------------------------------------------
 // "Quit" event
 //-----------------------------------------------------------------------------
@@ -125,19 +100,17 @@ void Application::bindQuit()
 {
     QObject::connect(
         this, SIGNAL(doQuit()),
-        &application, SLOT(quit())
+        core, SLOT(quit())
+    );
+
+    QObject::connect(
+        core, SIGNAL(aboutToQuit()),
+        this, SLOT(onTimerQuit())
     );
     QObject::connect(
-        &application, SIGNAL(aboutToQuit()),
+        core, SIGNAL(aboutToQuit()),
         this, SLOT(onQuit())
     );
-}
-
-void Application::onQuit()
-{
-    frequency = 0;
-
-    // TODO: free resources
 }
 
 
