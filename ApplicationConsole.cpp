@@ -1,6 +1,4 @@
 #include "ApplicationConsole.h"
-
-#include "ArgumentsConsole.h"
 #include <QDebug>
 
 ApplicationConsole::ApplicationConsole(Arguments* arguments):
@@ -31,6 +29,5 @@ void ApplicationConsole::onQuit()
 Component<Required<Arguments>, Application> getApplicationConsoleComponent()
 {
     return fruit::createComponent()
-            .install(getArgumentsConsoleComponent)
             .bind<Application, ApplicationConsole>();
 }
