@@ -1,12 +1,12 @@
 // Determine application container type
 #if defined(DEBUG)
-    #include "ContainerDebug.h"
+    #include "Container/ContainerDebug.h"
     #define getContainer getContainerDebugComponent
 #elif defined(TEST)
-    #include "ContainerTest.h"
+    #include "Container/ContainerTest.h"
     #define getContainer getContainerTestComponent
 #else
-    #include "ContainerRelease.h"
+    #include "Container/ContainerRelease.h"
     #define getContainer getContainerReleaseComponent
 #endif
 

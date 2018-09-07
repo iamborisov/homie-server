@@ -11,28 +11,28 @@ VERSION = 1.0.0
 
 SOURCES = \
 	main.cpp \
-        Application.cpp \
-        ApplicationConsole.cpp \
-        Arguments.cpp \
-        ArgumentsConsole.cpp \
-	Configuration.cpp \
-        ConfigurationFile.cpp \
-	Container.cpp \
-	ContainerDebug.cpp \
-	ContainerRelease.cpp \
-        ContainerTest.cpp
+        Application/Application.cpp \
+        Application/ApplicationConsole.cpp \
+        Arguments/Arguments.cpp \
+        Arguments/ArgumentsConsole.cpp \
+        Configuration/Configuration.cpp \
+        Configuration/ConfigurationFile.cpp \
+        Container/Container.cpp \
+        Container/ContainerDebug.cpp \
+        Container/ContainerRelease.cpp \
+        Container/ContainerTest.cpp
 
 HEADERS = \
-        Application.h \
-        ApplicationConsole.h \
-        Arguments.h \
-        ArgumentsConsole.h \
-        Configuration.h \
-        ConfigurationFile.h \
-        Container.h \
-        ContainerDebug.h \
-        ContainerRelease.h \
-        ContainerTest.h
+        Application/Application.h \
+        Application/ApplicationConsole.h \
+        Arguments/Arguments.h \
+        Arguments/ArgumentsConsole.h \
+        Configuration/Configuration.h \
+        Configuration/ConfigurationFile.h \
+        Container/Container.h \
+        Container/ContainerDebug.h \
+        Container/ContainerRelease.h \
+        Container/ContainerTest.h \
         fruit.h
 
 #==============================================================================

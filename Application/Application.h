@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QCoreApplication>
 
-#include "Arguments.h"
+#include "Arguments/Arguments.h"
 
 class Application : public QObject
 {

@@ -3,9 +3,9 @@
 
 #include <QObject>
 
-#include "Application.h"
-#include "Arguments.h"
-#include "Configuration.h"
+#include "Application/Application.h"
+#include "Arguments/Arguments.h"
+#include "Configuration/Configuration.h"
 
 class Container : public QObject
 {

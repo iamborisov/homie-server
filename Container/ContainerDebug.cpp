@@ -1,8 +1,8 @@
 #include "ContainerDebug.h"
 
-#include "ApplicationConsole.h"
-#include "ArgumentsConsole.h"
-#include "ConfigurationFile.h"
+#include "Application/ApplicationConsole.h"
+#include "Arguments/ArgumentsConsole.h"
+#include "Configuration/ConfigurationFile.h"
 
 ContainerDebug::ContainerDebug( Application* application,
                                 Arguments* arguments,
