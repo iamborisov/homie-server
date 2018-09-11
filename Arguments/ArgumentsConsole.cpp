@@ -1,5 +1,8 @@
 #include "ArgumentsConsole.h"
 
+#include "Container/Container.h"
+#include "Application/Application.h"
+
 ArgumentsConsole::ArgumentsConsole():
     Arguments(),
     parser()
@@ -9,9 +12,23 @@ ArgumentsConsole::ArgumentsConsole():
     parser.addHelpOption();
 }
 
-void ArgumentsConsole::process()
+//-----------------------------------------------------------------------------
+// Events
+//-----------------------------------------------------------------------------
+
+void ArgumentsConsole::onAttachContainer()
 {
-    parser.process(getArguments());
+    Container* container = static_cast<Container*>(getContainer());
+
+    QObject::connect(
+        container->getApplication(), SIGNAL(doInit()),
+        this, SLOT(onApplicationInit())
+    );
+}
+
+void ArgumentsConsole::onApplicationInit()
+{
+    parser.process(get());
 }
 
 //-----------------------------------------------------------------------------

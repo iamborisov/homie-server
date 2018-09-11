@@ -1,29 +1,36 @@
 #ifndef ARGUMENTS_H
 #define ARGUMENTS_H
 
-#include <QObject>
 #include <QStringList>
 
-class Arguments : public QObject
+#include "common/Service.h"
+
+class Arguments : public Service
 {
     Q_OBJECT
-
 public:
     Arguments();
 
-    virtual void process() = 0;
+//-----------------------------------------------------------------------------
+// Fields
+//  - ...
+//  - argc
+//  - argv
+//-----------------------------------------------------------------------------
 
-    QStringList getArguments();
+public:
+    void set(QStringList args);
+    void set(int &argc, char **argv);
+    const QStringList get();
 
-    Arguments* setArgc(int &argc);
     int& getArgc();
-
-    Arguments* setArgv(char **argv);
     char** getArgv();
 
 private:
-    int argc;
-    char **argv;
+    QStringList arguments;
+    int count;
+
+//-----------------------------------------------------------------------------
 };
 
 #endif // ARGUMENTS_H

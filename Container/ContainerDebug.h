@@ -1,11 +1,13 @@
 #ifndef  CONTAINER_DEBUG_H
 #define  CONTAINER_DEBUG_H
 
-#include "fruit.h"
+#include "common/fruit.h"
+
 #include "Container.h"
 
 class ContainerDebug : public Container
 {
+    Q_OBJECT
 public:
     INJECT(ContainerDebug(
         Application* application,

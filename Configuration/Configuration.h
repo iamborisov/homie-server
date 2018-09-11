@@ -1,12 +1,11 @@
 #ifndef CONFIGURATION_H
 #define CONFIGURATION_H
 
-#include <QObject>
+#include "common/Service.h"
 
-class Configuration : public QObject
+class Configuration : public Service
 {
     Q_OBJECT
-
 public:
     Configuration();
 

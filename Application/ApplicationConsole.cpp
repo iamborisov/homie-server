@@ -1,5 +1,4 @@
 #include "ApplicationConsole.h"
-#include <QDebug>
 
 ApplicationConsole::ApplicationConsole(Arguments* arguments):
     Application(arguments)
@@ -7,20 +6,19 @@ ApplicationConsole::ApplicationConsole(Arguments* arguments):
 
 }
 
-void ApplicationConsole::onRun()
-{
-    qDebug() << "ApplicationConsole::onRun";
-}
+//-----------------------------------------------------------------------------
+// Events
+//-----------------------------------------------------------------------------
 
-void ApplicationConsole::onMain()
-{
-    qDebug() << "ApplicationConsole::onMain";
-}
-
-void ApplicationConsole::onQuit()
-{
-    qDebug() << "ApplicationConsole::onQuit";
-}
+void ApplicationConsole::onInit() {}
+void ApplicationConsole::onBeforeStart() {}
+void ApplicationConsole::onStart() {}
+void ApplicationConsole::onAfterStart() {}
+void ApplicationConsole::onBeforeLoop() {}
+void ApplicationConsole::onLoop() {}
+void ApplicationConsole::onAfterLoop() {}
+void ApplicationConsole::onBeforeQuit() {}
+void ApplicationConsole::onQuit() {}
 
 //-----------------------------------------------------------------------------
 // Dependency Injection

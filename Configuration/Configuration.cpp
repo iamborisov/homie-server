@@ -1,6 +1,6 @@
 #include "Configuration.h"
 
-Configuration::Configuration() : QObject(nullptr)
+Configuration::Configuration() : Service()
 {
 
 }

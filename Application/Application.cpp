@@ -1,117 +1,111 @@
 #include "Application.h"
+
 #include <QTimer>
 
 Application::Application(Arguments* arguments) :
-    QObject(nullptr),
+    Service(),
     arguments(arguments)
 {
 }
 
 //-----------------------------------------------------------------------------
-// Main loop timer
+// Fields
 //-----------------------------------------------------------------------------
 
-void Application::startTimer(int delay)
+bool Application::isFinished()
 {
-    if (delay > 0) {
-        QTimer::singleShot(delay, this, SLOT(onTimer()));
-    } else if (delay == 0) {
-        onTimer();
+    return finished;
+}
+
+//-----------------------------------------------------------------------------
+// Main cycle
+//-----------------------------------------------------------------------------
+
+void Application::cycle()
+{
+    if (!finished) {
+        if (timeout >= 0) {
+            QTimer::singleShot(timeout, this, SLOT(onCycle()));
+        } else {
+            onCycle();
+        }
     }
 }
 
-void Application::stopTimer()
+void Application::onCycle()
 {
-    timeout = -1;
+    if (!finished) {
+        emit doBeforeLoop();
+        emit doLoop();
+        emit doAfterLoop();
+
+        cycle();
+    }
 }
 
-void Application::onTimer()
+void Application::onShutdown()
 {
-    main();
-    startTimer(timeout);
-}
+    finished = true;
 
-void Application::onTimerQuit()
-{
-    stopTimer();
+    emit doBeforeQuit();
+    emit doQuit();
 }
 
 //-----------------------------------------------------------------------------
-// "Run" event
+// Methods
 //-----------------------------------------------------------------------------
 
-int Application::run()
+void Application::init()
 {
     // Init application core
     core = new QCoreApplication(arguments->getArgc(), arguments->getArgv());
     core->setApplicationName(APP_NAME);
     core->setApplicationVersion(APP_VERSION);
 
-    // Events bindings
-    bindRun();
-    bindMain();
-    bindQuit();
+    // Bind events slots
+    QObject::connect(this, SIGNAL(doInit()), this, SLOT(onInit()));
 
-    // Emit event
-    emit doRun();
+    QObject::connect(this, SIGNAL(doBeforeStart()), this, SLOT(onBeforeStart()));
+    QObject::connect(this, SIGNAL(doStart()), this, SLOT(onStart()));
+    QObject::connect(this, SIGNAL(doAfterStart()), this, SLOT(onAfterStart()));
+
+    QObject::connect(this, SIGNAL(doBeforeLoop()), this, SLOT(onBeforeLoop()));
+    QObject::connect(this, SIGNAL(doLoop()), this, SLOT(onLoop()));
+    QObject::connect(this, SIGNAL(doAfterLoop()), this, SLOT(onAfterLoop()));
+
+    QObject::connect(this, SIGNAL(doBeforeQuit()), this, SLOT(onBeforeQuit()));
+    QObject::connect(this, SIGNAL(doQuit()), this, SLOT(onQuit()));
+
+    // Bind application quit
+    QObject::connect(core, SIGNAL(aboutToQuit()), this, SLOT(onShutdown()));
+
+    // Emit initialization event
+    emit doInit();
+}
+
+void Application::start()
+{
+    emit doBeforeStart();
+    emit doStart();
+    emit doAfterStart();
 
     // Start main loop
-    startTimer(timeout);
+    cycle();
+}
 
-    // Run application core
+int Application::exec()
+{
+    init();
+    start();
+
     return core->exec();
 }
 
-void Application::bindRun()
-{
-    QObject::connect(
-        this, SIGNAL(doRun()),
-        this, SLOT(onRun())
-    );
-}
-
-//-----------------------------------------------------------------------------
-// "Main" event
-//-----------------------------------------------------------------------------
-
-void Application::main()
-{
-    emit doMain();
-}
-
-void Application::bindMain()
-{
-    QObject::connect(
-        this, SIGNAL(doMain()),
-        this, SLOT(onMain())
-    );
-}
-
-//-----------------------------------------------------------------------------
-// "Quit" event
-//-----------------------------------------------------------------------------
-
 void Application::quit()
 {
-    emit doQuit();
+    core->quit();
 }
 
-void Application::bindQuit()
-{
-    QObject::connect(
-        this, SIGNAL(doQuit()),
-        core, SLOT(quit())
-    );
-
-    QObject::connect(
-        core, SIGNAL(aboutToQuit()),
-        this, SLOT(onTimerQuit())
-    );
-    QObject::connect(
-        core, SIGNAL(aboutToQuit()),
-        this, SLOT(onQuit())
-    );
-}
 
 
 

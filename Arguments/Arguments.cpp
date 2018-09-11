@@ -1,42 +1,54 @@
 #include "Arguments.h"
 
-Arguments::Arguments(): QObject(nullptr)
+#include "common/QStringListConverter.h"
+
+Arguments::Arguments():
+    Service(),
+    arguments()
 {
 }
 
-Arguments* Arguments::setArgc(int &argc)
-{
-    this->argc = argc;
+//-----------------------------------------------------------------------------
+// Fields
+//-----------------------------------------------------------------------------
 
-    return this;
+void Arguments::set(const QStringList args)
+{
+    arguments.clear();
+
+    foreach(QString s, args) {
+        arguments << s;
+    }
+
+    count = arguments.count();
+}
+
+void Arguments::set(int &argc, char **argv)
+{
+    arguments.clear();
+
+    for (int a = 0; a < argc; ++a) {
+        arguments << QString::fromLocal8Bit(argv[a]);
+    }
+
+    count = argc;
+}
+
+const QStringList Arguments::get()
+{
+    return arguments;
 }
 
 int& Arguments::getArgc()
 {
-    return this->argc;
-}
-
-Arguments* Arguments::setArgv(char **argv)
-{
-    this->argv = argv;
-
-    return this;
+    return count;
 }
 
 char** Arguments::getArgv()
 {
-    return this->argv;
-}
+    char** result = new char*[arguments.count()];
 
-QStringList Arguments::getArguments()
-{
-    QStringList list;
+    std::generate(result, result + arguments.size(), QStringListConverter(arguments));
 
-    const int ac = argc;
-    char ** const av = argv;
-    for (int a = 0; a < ac; ++a) {
-        list << QString::fromLocal8Bit(av[a]);
-    }
-
-    return list;
+    return result;
 }

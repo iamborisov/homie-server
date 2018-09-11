@@ -2,67 +2,93 @@
 #  APPLICATION INFORMATION
 #==============================================================================
 
-NAME = Homie-Server
-VERSION = 1.0.0
+    NAME = Homie-Server
+    VERSION = 1.0.0
 
 #==============================================================================
 #  SOURCES
 #==============================================================================
 
-SOURCES = \
-	main.cpp \
-        Application/Application.cpp \
-        Application/ApplicationConsole.cpp \
-        Arguments/Arguments.cpp \
-        Arguments/ArgumentsConsole.cpp \
-        Configuration/Configuration.cpp \
-        Configuration/ConfigurationFile.cpp \
-        Container/Container.cpp \
-        Container/ContainerDebug.cpp \
-        Container/ContainerRelease.cpp \
-        Container/ContainerTest.cpp
+# Common ----------------------------------------------------------------------
 
-HEADERS = \
-        Application/Application.h \
-        Application/ApplicationConsole.h \
-        Arguments/Arguments.h \
-        Arguments/ArgumentsConsole.h \
-        Configuration/Configuration.h \
-        Configuration/ConfigurationFile.h \
-        Container/Container.h \
-        Container/ContainerDebug.h \
-        Container/ContainerRelease.h \
-        Container/ContainerTest.h \
-        fruit.h
+    HEADERS += \
+            common/fruit.h \
+            common/QStringListConverter.h \
+            common/Service.h
+
+    SOURCES += \
+            main.cpp \
+            common/QStringListConverter.cpp \
+            common/Service.cpp
+
+# Services --------------------------------------------------------------------
+
+    HEADERS += \
+            Application/Application.h \
+            Application/ApplicationConsole.h \
+            Arguments/Arguments.h \
+            Arguments/ArgumentsConsole.h \
+            Configuration/Configuration.h \
+            Configuration/ConfigurationFile.h
+
+    SOURCES += \
+            Application/Application.cpp \
+            Application/ApplicationConsole.cpp \
+            Arguments/Arguments.cpp \
+            Arguments/ArgumentsConsole.cpp \
+            Configuration/Configuration.cpp \
+            Configuration/ConfigurationFile.cpp
+
+# Environment Containers ------------------------------------------------------
+
+    HEADERS += Container/Container.h
+    SOURCES += Container/Container.cpp
+
+    CONFIG(debug, debug|release) {
+        HEADERS += Container/ContainerDebug.h
+        SOURCES += Container/ContainerDebug.cpp
+    }
+
+    CONFIG(release, debug|release) {
+        HEADERS += Container/ContainerRelease.h
+        SOURCES += Container/ContainerRelease.cpp
+    }
 
 #==============================================================================
 #  QT CONFIGURATION
 #==============================================================================
 
-QT -= gui
+    QT -= gui
 
-CONFIG += c++11 console
-CONFIG -= app_bundle
-#CONFIG += object_parallel_to_source
+    CONFIG += c++11 console
+    CONFIG -= app_bundle
 
-DEFINES += QT_DEPRECATED_WARNINGS # Display deprication warnings
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000 # Disable all the APIs deprecated before Qt 6.0.0
+    # Display deprication warnings
+    DEFINES += QT_DEPRECATED_WARNINGS
+
+    # Disable all the APIs deprecated before Qt 6.0.0
+    #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
 
 #==============================================================================
 #  EXTERNAL DEPENDENCIES
 #==============================================================================
 
-# Google Fruit DI-framework
-# https://github.com/google/fruit
-unix|win32: LIBS += -ldl -lfruit
+    # Google Fruit DI-framework
+    # https://github.com/google/fruit
+    unix|win32: LIBS += -ldl -lfruit
 
 #==============================================================================
 #  ADDITIONAL DEFINITIONS
 #==============================================================================
 
-CONFIG(debug, debug|release) {
-    VERSION = $${VERSION}-dev
-}
+# Debug -----------------------------------------------------------------------
 
-DEFINES += APP_NAME=\\\"$${NAME}\\\"
-DEFINES += APP_VERSION=\\\"$${VERSION}\\\"
+    CONFIG(debug, debug|release) {
+        VERSION = $${VERSION}-dev
+        DEFINES += DEBUG
+    }
+
+# Strings ---------------------------------------------------------------------
+
+    DEFINES += APP_NAME=\\\"$${NAME}\\\"
+    DEFINES += APP_VERSION=\\\"$${VERSION}\\\"

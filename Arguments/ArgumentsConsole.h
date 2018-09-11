@@ -2,19 +2,35 @@
 #define ARGUMENTSCONSOLE_H
 
 #include <QCommandLineParser>
-#include "fruit.h"
+
+#include "common/fruit.h"
+
 #include "Arguments.h"
 
 class ArgumentsConsole : public Arguments
 {
+    Q_OBJECT
 public:
     INJECT(ArgumentsConsole());
 
-    virtual void process() override;
+//-----------------------------------------------------------------------------
+// Fields
+//-----------------------------------------------------------------------------
 
 private:
     QCommandLineParser parser;
 
+//-----------------------------------------------------------------------------
+// Events
+//-----------------------------------------------------------------------------
+
+protected slots:
+    virtual void onAttachContainer() override;
+
+private slots:
+    void onApplicationInit();
+
+//-----------------------------------------------------------------------------
 };
 
 Component<Arguments> getArgumentsConsoleComponent();
