@@ -1,12 +1,12 @@
 #include "Service.h"
-
+#include <QDebug>
 #include "Container/Container.h"
 
 Service::Service() :
     QObject(nullptr)
 {
-    QObject::connect(this, SIGNAL(doAttachContainer()), this, SLOT(onAttachContainer()));
-    QObject::connect(this, SIGNAL(doDetachContainer()), this, SLOT(onDetachContainer()));
+    QObject::connect(this, &Service::doAttachContainer, this, &Service::onAttachContainer);
+    QObject::connect(this, &Service::doDetachContainer, this, &Service::onDetachContainer);
 }
 
 //-----------------------------------------------------------------------------
@@ -15,7 +15,12 @@ Service::Service() :
 
 Service* Service::getContainer()
 {
-    return static_cast<Container*>(this->parent());
+    if (container == nullptr) {
+        qDebug() << "container is NULL";
+        return nullptr;
+    } else {
+        return static_cast<Service*>(container);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -24,14 +29,26 @@ Service* Service::getContainer()
 
 void Service::attach(Service* container)
 {
-    setParent(container);
+    if (this->container == container) {
+        return;
+    }
+
+    if (this->container != nullptr) {
+        detach();
+    }
+
+    this->container = container;
     emit doAttachContainer();
 }
 
 void Service::detach()
 {
+    if (this->container == nullptr) {
+        return;
+    }
+
     emit doDetachContainer();
-    setParent(nullptr);
+    container = nullptr;
 }
 
 //-----------------------------------------------------------------------------

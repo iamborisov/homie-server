@@ -10,22 +10,7 @@ class ApplicationConsole : public Application
     Q_OBJECT
 public:
     INJECT(ApplicationConsole(Arguments* arguments));
-
-//-----------------------------------------------------------------------------
-// Events
-//-----------------------------------------------------------------------------
-
-public slots:
-    virtual void onInit() override;
-    virtual void onBeforeStart() override;
-    virtual void onStart() override;
-    virtual void onAfterStart() override;
-    virtual void onBeforeLoop() override;
-    virtual void onLoop() override;
-    virtual void onAfterLoop() override;
-    virtual void onBeforeQuit() override;
-    virtual void onQuit() override;
-
+    ~ApplicationConsole();
 //-----------------------------------------------------------------------------
 };
 

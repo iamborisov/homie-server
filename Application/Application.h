@@ -12,6 +12,7 @@ class Application : public Service
     Q_OBJECT
 public:
     Application(Arguments* arguments);
+    ~Application();
 
 //-----------------------------------------------------------------------------
 // Fields
@@ -25,6 +26,7 @@ private:
     int timeout = 10; //ms
     bool finished = false;
 
+protected:
     QCoreApplication* core;
     Arguments* arguments;
 
@@ -38,18 +40,20 @@ public:
     int exec();
     void quit();
 
-private:
+protected:
     void init();
     void start();
     void cycle();
 
-private slots:
+protected slots:
     void onCycle();
     void onShutdown();
 
 //-----------------------------------------------------------------------------
 // Events
+//  - onBeforeInit
 //  - onInit
+//  - onAfterInit
 //  - onBeforeStart
 //  - onStart
 //  - onAfterStart
@@ -61,7 +65,9 @@ private slots:
 //-----------------------------------------------------------------------------
 
 signals:
+    void doBeforeInit();
     void doInit();
+    void doAfterInit();
     void doBeforeStart();
     void doStart();
     void doAfterStart();
@@ -72,15 +78,25 @@ signals:
     void doQuit();
 
 public slots:
-    virtual void onInit() = 0;
-    virtual void onBeforeStart() = 0;
-    virtual void onStart() = 0;
-    virtual void onAfterStart() = 0;
-    virtual void onBeforeLoop() = 0;
-    virtual void onLoop() = 0;
-    virtual void onAfterLoop() = 0;
-    virtual void onBeforeQuit() = 0;
-    virtual void onQuit() = 0;
+    void onBeforeInit();
+    void onInit();
+    void onAfterInit();
+    void onBeforeStart();
+    void onStart();
+    void onAfterStart();
+    void onBeforeLoop();
+    void onLoop();
+    void onAfterLoop();
+    void onBeforeQuit();
+    void onQuit();
+
+//-----------------------------------------------------------------------------
+// Service
+//-----------------------------------------------------------------------------
+
+protected slots:
+    virtual void onAttachContainer() override;
+    virtual void onDetachContainer() override;
 
 //-----------------------------------------------------------------------------
 };

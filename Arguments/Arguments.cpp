@@ -1,29 +1,17 @@
 #include "Arguments.h"
 
-#include "common/QStringListConverter.h"
-
 Arguments::Arguments():
     Service(),
     arguments()
 {
+    this->argc = 0;
 }
 
 //-----------------------------------------------------------------------------
 // Fields
 //-----------------------------------------------------------------------------
 
-void Arguments::set(const QStringList args)
-{
-    arguments.clear();
-
-    foreach(QString s, args) {
-        arguments << s;
-    }
-
-    count = arguments.count();
-}
-
-void Arguments::set(int &argc, char **argv)
+void Arguments::setArguments(int &argc, char **argv)
 {
     arguments.clear();
 
@@ -31,24 +19,21 @@ void Arguments::set(int &argc, char **argv)
         arguments << QString::fromLocal8Bit(argv[a]);
     }
 
-    count = argc;
+    this->argc = argc;
+    this->argv = argv;
 }
 
-const QStringList Arguments::get()
+const QStringList Arguments::getArguments()
 {
     return arguments;
 }
 
 int& Arguments::getArgc()
 {
-    return count;
+    return argc;
 }
 
 char** Arguments::getArgv()
 {
-    char** result = new char*[arguments.count()];
-
-    std::generate(result, result + arguments.size(), QStringListConverter(arguments));
-
-    return result;
+    return argv;
 }

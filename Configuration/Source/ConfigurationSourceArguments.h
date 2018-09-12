@@ -1,42 +1,31 @@
-#ifndef CONFIGURATION_H
-#define CONFIGURATION_H
+#ifndef CONFIGURATIONSOURCEARGUMENTS_H
+#define CONFIGURATIONSOURCEARGUMENTS_H
 
-#include <QVariant>
-#include <QString>
-#include <vector>
+#include "common/fruit.h"
 
-#include "common/Service.h"
+#include "ConfigurationSource.h"
+#include "Arguments/Arguments.h"
 
-#include "Configuration/ConfigurationService.h"
-#include "Configuration/Resolver/ConfigurationResolver.h"
-
-class Configuration : public Service
+class ConfigurationSourceArguments : public ConfigurationSource
 {
     Q_OBJECT
 public:
-    Configuration(ConfigurationResolver* resolver);
+    INJECT(ConfigurationSourceArguments(Arguments* arguments));
 
 //-----------------------------------------------------------------------------
 // Fields
 //-----------------------------------------------------------------------------
 
 private:
-    ConfigurationResolver* resolver;
+    Arguments* arguments;
 
 //-----------------------------------------------------------------------------
 // Methods
 //-----------------------------------------------------------------------------
 
 protected:
-    std::vector<ConfigurationService*> getConfigurableServices();
-
-//-----------------------------------------------------------------------------
-// Events
-//-----------------------------------------------------------------------------
-
-public slots:
-    virtual void onApplicationBeforeInit();
-    virtual void onApplicationAfterInit();
+    virtual void loadOption(ConfigurationOption* option) override;
+    virtual void resolveOption(ConfigurationOption* option) override;
 
 //-----------------------------------------------------------------------------
 // Service
@@ -47,7 +36,8 @@ protected slots:
     virtual void onDetachContainer() override;
 
 //-----------------------------------------------------------------------------
-
 };
 
-#endif // CONFIGURATION_H
+Component<Required<Arguments>, ConfigurationSource> getConfigurationSourceArgumentsComponent();
+
+#endif // CONFIGURATIONSOURCEARGUMENTS_H

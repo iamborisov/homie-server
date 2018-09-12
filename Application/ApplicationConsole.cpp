@@ -1,24 +1,17 @@
 #include "ApplicationConsole.h"
 
+#include <QDebug>
+
 ApplicationConsole::ApplicationConsole(Arguments* arguments):
     Application(arguments)
 {
-
+    qDebug() << "new ApplicationConsole";
 }
 
-//-----------------------------------------------------------------------------
-// Events
-//-----------------------------------------------------------------------------
-
-void ApplicationConsole::onInit() {}
-void ApplicationConsole::onBeforeStart() {}
-void ApplicationConsole::onStart() {}
-void ApplicationConsole::onAfterStart() {}
-void ApplicationConsole::onBeforeLoop() {}
-void ApplicationConsole::onLoop() {}
-void ApplicationConsole::onAfterLoop() {}
-void ApplicationConsole::onBeforeQuit() {}
-void ApplicationConsole::onQuit() {}
+ApplicationConsole::~ApplicationConsole()
+{
+    qDebug() << "delete ApplicationConsole";
+}
 
 //-----------------------------------------------------------------------------
 // Dependency Injection
@@ -26,6 +19,6 @@ void ApplicationConsole::onQuit() {}
 
 Component<Required<Arguments>, Application> getApplicationConsoleComponent()
 {
-    return fruit::createComponent()
+    return createComponent()
             .bind<Application, ApplicationConsole>();
 }

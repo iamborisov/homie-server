@@ -13,45 +13,72 @@
 
     HEADERS += \
             common/fruit.h \
-            common/QStringListConverter.h \
             common/Service.h
 
     SOURCES += \
             main.cpp \
-            common/QStringListConverter.cpp \
             common/Service.cpp
 
 # Services --------------------------------------------------------------------
 
     HEADERS += \
+            Container/Container.h \
             Application/Application.h \
             Application/ApplicationConsole.h \
             Arguments/Arguments.h \
             Arguments/ArgumentsConsole.h \
             Configuration/Configuration.h \
-            Configuration/ConfigurationFile.h
+            Configuration/ConfigurationOption.h \
+            Configuration/ConfigurationGroup.h \
+            Configuration/ConfigurationService.h \
+            Configuration/Source/ConfigurationSource.h \
+            Configuration/Source/ConfigurationSourceFile.h \
+            Configuration/Source/ConfigurationSourceArguments.h \
+            Configuration/Resolver/ConfigurationResolver.h \
+            Configuration/Resolver/ConfigurationResolverPriority.h
 
     SOURCES += \
+            Container/Container.cpp \
             Application/Application.cpp \
             Application/ApplicationConsole.cpp \
             Arguments/Arguments.cpp \
             Arguments/ArgumentsConsole.cpp \
             Configuration/Configuration.cpp \
-            Configuration/ConfigurationFile.cpp
+            Configuration/ConfigurationOption.cpp \
+            Configuration/ConfigurationGroup.cpp \
+            Configuration/ConfigurationService.cpp \
+            Configuration/Source/ConfigurationSource.cpp \
+            Configuration/Source/ConfigurationSourceFile.cpp \
+            Configuration/Source/ConfigurationSourceArguments.cpp \
+            Configuration/Resolver/ConfigurationResolver.cpp \
+            Configuration/Resolver/ConfigurationResolverPriority.cpp
 
-# Environment Containers ------------------------------------------------------
+# Environment Dependencies ----------------------------------------------------
 
-    HEADERS += Container/Container.h
-    SOURCES += Container/Container.cpp
-
+    # Debug
     CONFIG(debug, debug|release) {
-        HEADERS += Container/ContainerDebug.h
-        SOURCES += Container/ContainerDebug.cpp
+        HEADERS += \
+                Container/Environment/ContainerDebug.h \
+                Configuration/Environment/ConfigurationDebug.h \
+                Test/TestService.h \
+                Test/TestServiceImpl.h
+
+        SOURCES += \
+                Container/Environment/ContainerDebug.cpp \
+                Configuration/Environment/ConfigurationDebug.cpp \
+                Test/TestService.cpp \
+                Test/TestServiceImpl.cpp
     }
 
+    # Release
     CONFIG(release, debug|release) {
-        HEADERS += Container/ContainerRelease.h
-        SOURCES += Container/ContainerRelease.cpp
+        HEADERS += \
+                Container/Environment/ContainerRelease.h \
+                Configuration/Environment/ConfigurationRelease.h
+
+        SOURCES += \
+                Container/Environment/ContainerRelease.cpp \
+                Configuration/Environment/ConfigurationRelease.cpp
     }
 
 #==============================================================================

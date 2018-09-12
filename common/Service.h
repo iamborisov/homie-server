@@ -7,7 +7,7 @@ class Service : public QObject
 {
     Q_OBJECT
 public:
-    explicit Service();
+    Service();
 
 //-----------------------------------------------------------------------------
 // Fields
@@ -17,6 +17,9 @@ public:
 public:
     Service* getContainer();
 
+private:
+    Service* container;
+
 //-----------------------------------------------------------------------------
 // Methods
 //  - attach
@@ -24,8 +27,8 @@ public:
 //-----------------------------------------------------------------------------
 
 public:
-    void attach(Service* container);
-    void detach();
+    virtual void attach(Service* container);
+    virtual void detach();
 
 //-----------------------------------------------------------------------------
 // Events

@@ -2,7 +2,10 @@
 
 #include "Application/ApplicationConsole.h"
 #include "Arguments/ArgumentsConsole.h"
-#include "Configuration/ConfigurationFile.h"
+#include "Configuration/Source/ConfigurationSourceFile.h"
+#include "Configuration/Source/ConfigurationSourceArguments.h"
+#include "Configuration/Resolver/ConfigurationResolverPriority.h"
+#include "Configuration/Environment/ConfigurationRelease.h"
 
 ContainerRelease::ContainerRelease( Application* application,
                                     Arguments* arguments,
@@ -19,9 +22,19 @@ ContainerRelease::ContainerRelease( Application* application,
 //-----------------------------------------------------------------------------
 
 Component<Container> getContainerReleaseComponent() {
-    return fruit::createComponent()
+    return createComponent()
+
+            // application
             .install(getApplicationConsoleComponent)
+
+            // arguments
             .install(getArgumentsConsoleComponent)
-            .install(getConfigurationFileComponent)
+
+            // configuration
+            .addMultibinding<ConfigurationSource, ConfigurationSourceFile>()
+            .addMultibinding<ConfigurationSource, ConfigurationSourceArguments>()
+            .install(getConfigurationResolverPriorityComponent)
+            .install(getConfigurationReleaseComponent)
+
             .bind<Container, ContainerRelease>();
 }

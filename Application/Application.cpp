@@ -2,10 +2,28 @@
 
 #include <QTimer>
 
+#include <QDebug>
+
 Application::Application(Arguments* arguments) :
     Service(),
     arguments(arguments)
 {
+    qDebug() << "new Application";
+}
+
+Application::~Application()
+{
+    qDebug() << "delete Application";
+}
+
+void Application::onAttachContainer()
+{
+    arguments->attach(getContainer());
+}
+
+void Application::onDetachContainer()
+{
+    arguments->detach();
 }
 
 //-----------------------------------------------------------------------------
@@ -25,7 +43,7 @@ void Application::cycle()
 {
     if (!finished) {
         if (timeout >= 0) {
-            QTimer::singleShot(timeout, this, SLOT(onCycle()));
+            QTimer::singleShot(timeout, this, &Application::onCycle);
         } else {
             onCycle();
         }
@@ -63,24 +81,28 @@ void Application::init()
     core->setApplicationVersion(APP_VERSION);
 
     // Bind events slots
-    QObject::connect(this, SIGNAL(doInit()), this, SLOT(onInit()));
+    QObject::connect(this, &Application::doBeforeInit,  this, &Application::onBeforeInit);
+    QObject::connect(this, &Application::doInit,        this, &Application::onInit);
+    QObject::connect(this, &Application::doAfterInit,   this, &Application::onAfterInit);
 
-    QObject::connect(this, SIGNAL(doBeforeStart()), this, SLOT(onBeforeStart()));
-    QObject::connect(this, SIGNAL(doStart()), this, SLOT(onStart()));
-    QObject::connect(this, SIGNAL(doAfterStart()), this, SLOT(onAfterStart()));
+    QObject::connect(this, &Application::doBeforeStart, this, &Application::onBeforeStart);
+    QObject::connect(this, &Application::doStart,       this, &Application::onStart);
+    QObject::connect(this, &Application::doAfterStart,  this, &Application::onAfterStart);
 
-    QObject::connect(this, SIGNAL(doBeforeLoop()), this, SLOT(onBeforeLoop()));
-    QObject::connect(this, SIGNAL(doLoop()), this, SLOT(onLoop()));
-    QObject::connect(this, SIGNAL(doAfterLoop()), this, SLOT(onAfterLoop()));
+    QObject::connect(this, &Application::doBeforeLoop,  this, &Application::onBeforeLoop);
+    QObject::connect(this, &Application::doLoop,        this, &Application::onLoop);
+    QObject::connect(this, &Application::doAfterLoop,   this, &Application::onAfterLoop);
 
-    QObject::connect(this, SIGNAL(doBeforeQuit()), this, SLOT(onBeforeQuit()));
-    QObject::connect(this, SIGNAL(doQuit()), this, SLOT(onQuit()));
+    QObject::connect(this, &Application::doBeforeQuit,  this, &Application::onBeforeQuit);
+    QObject::connect(this, &Application::doQuit,        this, &Application::onQuit);
 
     // Bind application quit
-    QObject::connect(core, SIGNAL(aboutToQuit()), this, SLOT(onShutdown()));
+    QObject::connect(core, &QCoreApplication::aboutToQuit, this, &Application::onShutdown);
 
     // Emit initialization event
+    emit doBeforeInit();
     emit doInit();
+    emit doAfterInit();
 }
 
 void Application::start()
@@ -105,6 +127,22 @@ void Application::quit()
 {
     core->quit();
 }
+
+//-----------------------------------------------------------------------------
+// Events
+//-----------------------------------------------------------------------------
+
+void Application::onBeforeInit()    {qDebug() << "Application::onBeforeInit";}
+void Application::onInit()          {qDebug() << "Application::onInit";}
+void Application::onAfterInit()     {qDebug() << "Application::onAfterInit";}
+void Application::onBeforeStart()   {qDebug() << "Application::onBeforeStart";}
+void Application::onStart()         {qDebug() << "Application::onStart";}
+void Application::onAfterStart()    {qDebug() << "Application::onAfterStart";}
+void Application::onBeforeLoop()    {}
+void Application::onLoop()          {}
+void Application::onAfterLoop()     {}
+void Application::onBeforeQuit()    {qDebug() << "Application::onBeforeQuit";}
+void Application::onQuit()          {qDebug() << "Application::onQuit";}
 
 
 
